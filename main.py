@@ -18,8 +18,8 @@ pygame.display.set_caption("Quiz")
 
 def main():
     state = 'start'
-    login_data = None
-    result = None
+    user_data = None
+    quiz_set = None
 
     while True:
 
@@ -28,19 +28,19 @@ def main():
             sys.exit()
 
         elif state == 'start':
-            state, login_data = sp.draw_start_page(screen, state)
+            state, user_data = sp.draw_start_page(screen, state)
 
         elif state == 'profile':
-            state = pp.draw_profile_page(screen, state, login_data)
+            state = pp.draw_profile_page(screen, state, user_data)
 
         elif state == 'category':
-            state = cp.draw_category_page(screen, state)
+            state, quiz_set = cp.draw_category_page(screen, state)
 
         elif state == 'quiz':
-            state, result = qp.draw_quiz_page(screen, state)
+            state, quiz_set = qp.draw_quiz_page(screen, state, quiz_set)
 
         elif state == 'quiz_result':
-            state = qrp.draw_quiz_result_page(screen, state, result)
+            state = qrp.draw_quiz_result_page(screen, state, quiz_set)
 
 
 if __name__ == "__main__":
