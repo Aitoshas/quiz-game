@@ -5,16 +5,16 @@ def sql_exec(str_sql):
         con.execute(str_sql)
         con.commit()
 
-def sql_get_user(user_name,user_pass):
+def sql_get_user(user_name,user_email):
     with sq.connect('game_quiz.db') as con:
         cur = con.cursor()
-        cur.execute("select id from user where name = ? and pass = ?",
-                    (user_name, user_pass))
+        cur.execute("select id, avatar from user where name = ? and email = ?",
+                    (user_name, user_email))
         rez = cur.fetchone()
         if rez is None:
             return -1
         else:
-            return rez[0]
+            return rez
 
 def sql_get_category(cat_name):
     with sq.connect('game_quiz.db') as con:

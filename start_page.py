@@ -1,8 +1,31 @@
 import pygame
 import quiz_lib as qlib
+import db_quiz
 
 FPS = 30
 
+def check_user(login_data):
+    # check_user({'username': input_login_text, 'email': input_email_text})
+    username = login_data['username'].lower()
+    email = login_data['email'].lower()
+
+    cur_user = db_quiz.sql_get_user(username, email)
+
+    #cur_user = False
+    #for user in users:
+    #    if user['username'] == username and user['email'] == email:
+    #        cur_user = user
+    #        break
+
+    #if not cur_user:
+    #    cur_user = {'username': username, 'email': email, 'avatar': '', 'id': len(users)}
+    #    users.append(cur_user)
+
+    if cur_user[0] == -1:
+        db_quiz.sql_exec(f'INSERT INTO user (name, email, pass, avatar)  VALUES ({username}, {email}, NULL, NULL)')
+        cur_user = db_quiz.sql_get_user(username, email)
+
+    return {'id': cur_user[0], 'username': username, 'email': email, 'avatar': cur_user[1]}
 
 def draw_start_page(screen, state):
 
@@ -39,7 +62,8 @@ def draw_start_page(screen, state):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if button_start['bt_rect'].collidepoint(event.pos):
                         if (input_login_text != '') and (input_email_text != ''):
-                            return 'profile', {'username': input_login_text, 'email': input_email_text}
+                            cur_user = check_user({'username': input_login_text, 'email': input_email_text})
+                            return 'profile', cur_user
                         else:
                             empty_input = True
 
@@ -56,9 +80,12 @@ def draw_start_page(screen, state):
 
                 # Обработка нажатия кнопок клавиатуры
                 elif event.type == pygame.KEYDOWN:
+
                     if input_login_active:
                         if event.key == pygame.K_BACKSPACE:
                             input_login_text = input_login_text[:-1]
+                        elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                            pass
                         else:
                             input_login_text += event.unicode
                         empty_input = False
@@ -66,6 +93,8 @@ def draw_start_page(screen, state):
                     if input_email_active:
                         if event.key == pygame.K_BACKSPACE:
                             input_email_text = input_email_text[:-1]
+                        elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                            pass
                         else:
                             input_email_text += event.unicode
                         empty_input = False
