@@ -1,12 +1,20 @@
 import pygame
 import quiz_lib as qlib
+import db_quiz
+from datetime import datetime
 
 FPS = 30
 
 
-def draw_quiz_page(screen, state, quiz_set):
+def draw_quiz_page(screen, state, quiz_set, user_data):
 
     cur_question = 0
+    #   Находим уник идентификатор игры
+    game_id = db_quiz.sql_get_next_game_id()
+    cur_date = datetime.now()
+    date_id = cur_date.strftime('%d-%m-%Y')
+
+    #
     active1 = active2 = active3 =  False
     fonts = qlib.create_fonts()
     clock = pygame.time.Clock()
@@ -21,7 +29,17 @@ def draw_quiz_page(screen, state, quiz_set):
             if state == 'quiz':
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if button_quiz['bt_rect'].collidepoint(event.pos):
-                        if cur_question < len(quiz_set) - 1:
+                        #   Сохранение ответа в БД
+                        db_quiz.sql_save_game_ansver(
+                            date_id,
+                            user_data['id'],
+                            game_id,
+                            quiz_set[cur_question]['id_question'],
+                            1 if quiz_set[cur_question]['user_answer'] == quiz_set[cur_question]['correct'] else 0,
+                            quiz_set[cur_question]['ball'] if quiz_set[cur_question]['user_answer'] == quiz_set[cur_question]['correct'] else 0
+                        )
+                        #
+                        if cur_question < len(quiz_set) - 1 :
                             cur_question += 1
                             active1 = active2 = active3 = False
                         else:
@@ -42,7 +60,7 @@ def draw_quiz_page(screen, state, quiz_set):
 
         screen.fill(qlib.BG_COLOR)
 
-        qlib.draw_text(screen, "Викторина", (300, 50), False, fonts['font32'])
+        qlib.draw_text(screen, f"Викторина (Вопрос {cur_question+1})", (300, 50), False, fonts['font32'])
         qlib.draw_button(screen, button_quiz)
         qlib.draw_question(screen, quiz_set[cur_question]['question'], (50, 150), False, fonts['font24'])
         rect_answer1 = qlib.draw_answer(screen, '1. ' + quiz_set[cur_question]['answers'][0], (50, 220), active1, fonts['font24'])
