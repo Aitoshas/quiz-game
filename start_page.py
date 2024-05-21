@@ -21,11 +21,19 @@ def check_user(login_data):
     #    cur_user = {'username': username, 'email': email, 'avatar': '', 'id': len(users)}
     #    users.append(cur_user)
 
-    if cur_user[0] == -1:
-        db_quiz.sql_exec(f'INSERT INTO user (name, email, pass, avatar)  VALUES ({username}, {email}, NULL, NULL)')
-        cur_user = db_quiz.sql_get_user(username, email)
+    if cur_user == -1:
+        cur_user = db_quiz.sql_save_user(username, email)
+        cur_user_avatar = None
+        #db_quiz.sql_exec(f'INSERT INTO user (name, email)  VALUES ({username}, {email})')
+        #cur_user = db_quiz.sql_get_user(username, email)
+    else:
+        cur_user_avatar = None
+        try:
+            cur_user_avatar = db_quiz.sql_get_avatar(cur_user)
+        except:
+            cur_user_avatar = None
 
-    return {'id': cur_user[0], 'username': username, 'email': email, 'avatar': cur_user[1]}
+    return {'id': cur_user, 'username': username, 'email': email, 'avatar': cur_user_avatar}
 
 def draw_start_page(screen, state):
 

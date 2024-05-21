@@ -1,6 +1,4 @@
 import pygame
-import sqlite3
-import random
 import sys
 import start_page as sp
 import profile_page as pp
@@ -13,7 +11,7 @@ pygame.init()
 
 WIDTH,HEIGHT = 800,600
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
-pygame.display.set_caption("Quiz")
+pygame.display.set_caption("Викторина Зерокодера")
 
 
 def main():
@@ -37,7 +35,7 @@ def main():
             state, quiz_set = cp.draw_category_page(screen, state)
 
         elif state == 'quiz':
-            state, quiz_set = qp.draw_quiz_page(screen, state, quiz_set)
+            state, quiz_set = qp.draw_quiz_page(screen, state, quiz_set, user_data)
 
         elif state == 'quiz_result':
             state = qrp.draw_quiz_result_page(screen, state, quiz_set)

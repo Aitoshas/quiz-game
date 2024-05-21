@@ -59,10 +59,18 @@ def load_file(cur_user):
             messagebox.showerror("Error", f"Failed to load image: {e}")
 
 def get_history(cur_user):
-
+    user_history = []
+    #
+    stat_user = db_quiz.sql_get_stats_user(cur_user['id'])
+    #user_id, data_id, game_id, cnt, sum_pt
+    for r_one in stat_user:
+        user_history.append({'date': r_one[1], 'score': r_one[4], 'game_id': r_one[2]})
+    #
+    '''
     user_history = [{'date': '2023-05-01', 'score': 100, 'game_id': 1},
                     {'date': '2023-05-02', 'score': 10, 'game_id': 12},
                     {'date': '2023-05-03', 'score': 80, 'game_id': 33}]
+                    '''
 
     return user_history
 
@@ -90,6 +98,8 @@ def draw_profile_page(screen, state, current_user):
 
                     if button_load_avatar['bt_rect'].collidepoint(event.pos):
                         load_file(current_user)
+                        #
+                        db_quiz.sql_save_image(current_user['id'], current_user['avatar'])
 
                     if button_end['bt_rect'].collidepoint(event.pos):
                         return 'quit'
@@ -98,8 +108,8 @@ def draw_profile_page(screen, state, current_user):
         screen.fill(qlib.BG_COLOR)
 
         qlib.draw_text(screen, 'Личный кабинет', (150, 30), False, fonts['font32'])
-        qlib.draw_text(screen, f'Имя игрока: {current_user['username']}', (250, 100), False, fonts['font24'])
-        qlib.draw_text(screen, f'Э-почта: {current_user['email']}', (250, 130), False, fonts['font24'])
+        qlib.draw_text(screen, f'Имя игрока: {current_user["username"]}', (250, 100), False, fonts['font24'])
+        qlib.draw_text(screen, f'Э-почта: {current_user["email"]}', (250, 130), False, fonts['font24'])
         user_avatar = current_user['avatar']
         if user_avatar != None:
             screen.blit(current_user['avatar'], (80, 80))
@@ -112,7 +122,8 @@ def draw_profile_page(screen, state, current_user):
         for ind, history in enumerate(user_history):
             if ind == 6:
                break
-            qlib.draw_text(screen, f'Викторина {history["game_id"]} : дата: {history["date"]} : результат: {history["score"]}', (80, 320 + ind * 30), False, fonts['font24'])
+            qlib.draw_text(screen, f'Викторина {history["game_id"]} : дата: {history["date"]} : результат: {history["score"]}',
+                           (80, 320 + ind * 30), False, fonts['font24'])
 
         qlib.draw_button(screen, button_profile)
         qlib.draw_button(screen, button_end)
