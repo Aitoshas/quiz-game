@@ -123,7 +123,7 @@ def sql_save_game_ansver(data_id, user_id, game_id, quiz_id, ans_num, points):
 def sql_get_stats_user(user_id):
     with sq.connect('game_quiz.db') as con:
         cur = con.cursor()
-        cur.execute(f"select user_id, data_id, game_id, cnt, sum_pt from all_games where user_id = ?" ,(user_id,))
+        cur.execute(f"select user_id, data_id, game_id, cnt, sum_pt from all_games where user_id = ? order by game_id desc limit 5" ,(user_id,))
         rez = cur.fetchall()
         return rez
 
