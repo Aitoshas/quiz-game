@@ -11,21 +11,9 @@ def check_user(login_data):
 
     cur_user = db_quiz.sql_get_user(username, email)
 
-    #cur_user = False
-    #for user in users:
-    #    if user['username'] == username and user['email'] == email:
-    #        cur_user = user
-    #        break
-
-    #if not cur_user:
-    #    cur_user = {'username': username, 'email': email, 'avatar': '', 'id': len(users)}
-    #    users.append(cur_user)
-
     if cur_user == -1:
         cur_user = db_quiz.sql_save_user(username, email)
         cur_user_avatar = None
-        #db_quiz.sql_exec(f'INSERT INTO user (name, email)  VALUES ({username}, {email})')
-        #cur_user = db_quiz.sql_get_user(username, email)
     else:
         cur_user_avatar = None
         try:
@@ -42,9 +30,9 @@ def draw_start_page(screen, state):
     label_title = 'Вход/регистрация'
     label_title_pos = (500, 30)
     label_login = 'Ваше имя:'
-    label_login_pos = (477, 80)
+    label_login_pos = (465, 75)
     label_email = 'Ваша э-почта:'
-    label_email_pos = (450, 110)
+    label_email_pos = (435, 105)
 
     input_login_active = False
     input_email_active = False
@@ -58,6 +46,8 @@ def draw_start_page(screen, state):
 
     clock = pygame.time.Clock()
     button_start = qlib.create_button('Войти', 560, 150, 110, 40, qlib.TEXT_COLOR, font=fonts['font32'])
+    #background_image = pygame.image.load('img/fon1.png')
+    background_image = pygame.image.load('img/fon1.png')
 
     while True:
 
@@ -107,22 +97,25 @@ def draw_start_page(screen, state):
                             input_email_text += event.unicode
                         empty_input = False
 
-        screen.fill(qlib.BG_COLOR)
+        #screen.fill(qlib.BG_COLOR)
+        #screen.fill((255, 190, 0))
+        screen.blit(background_image, (0, 0))
+
 
         qlib.draw_text(screen, label_title, label_title_pos, False, fonts['font32'])
         qlib.draw_text(screen, label_login, label_login_pos, False, fonts['font24'])
         qlib.draw_text(screen, label_email, label_email_pos, False, fonts['font24'])
-        pygame.draw.rect(screen, qlib.GRAY200 if input_login_active else qlib.GRAY240, input_login, 120)
-        pygame.draw.rect(screen, qlib.GRAY200 if input_email_active else qlib.GRAY240, input_email, 120)
+        pygame.draw.rect(screen, qlib.GRAY200 if input_login_active else qlib.GRAY240, input_login, 130)
+        pygame.draw.rect(screen, qlib.GRAY200 if input_email_active else qlib.GRAY240, input_email, 130)
         log_text = fonts['font24'].render(input_login_text, True, qlib.TEXT_COLOR)
-        screen.blit(log_text, (input_login.x + 5, input_login.y + 5))
+        screen.blit(log_text, (input_login.x + 5, input_login.y))
         em_text = fonts['font24'].render(input_email_text, True, qlib.TEXT_COLOR)
-        screen.blit(em_text, (input_email.x + 5, input_email.y + 5))
+        screen.blit(em_text, (input_email.x + 5, input_email.y))
         qlib.draw_button(screen, button_start)
         if empty_input:
             qlib.draw_text(screen, 'Укажите имя и э-почту', (560, 200), True, fonts['font24'])
 
-        qlib.draw_text(screen, 'Стартовая страница Викторины', (150, 400), False, fonts['font48'])
+        qlib.draw_text(screen, 'ВИКТОРИНА', (150, 300), False, fonts['font48'])
 
         pygame.display.flip()
         clock.tick(FPS)
