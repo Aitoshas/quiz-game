@@ -19,8 +19,9 @@ def draw_quiz_result_page(screen, state, quiz_set):
     fonts = qlib.create_fonts()
     clock = pygame.time.Clock()
     score = get_score(quiz_set)
-    button_next = qlib.create_button('Начать новую Викторину', 100, 500, 300, 50, qlib.TEXT_COLOR, font=fonts['font32'])
-    button_end = qlib.create_button('Закончить игру', 430, 500, 250, 50, qlib.TEXT_COLOR, font=fonts['font32'])
+    button_next = qlib.create_button('Начать новую Викторину', 80, 500, 340, 40, qlib.TEXT_COLOR, font=fonts['font32'])
+    button_end = qlib.create_button('Закончить игру', 450, 500, 220, 40, qlib.TEXT_COLOR, font=fonts['font32'])
+    background_image = pygame.image.load('img/fon1.png')
 
     while True:
 
@@ -36,13 +37,14 @@ def draw_quiz_result_page(screen, state, quiz_set):
                     elif button_end['bt_rect'].collidepoint(event.pos):
                         return 'profile'
 
-        screen.fill(qlib.BG_COLOR)
+        # screen.fill(qlib.BG_COLOR)
+        screen.blit(background_image, (0, 0))
 
         qlib.draw_text(screen, "Ваш результат", (200, 50), False, fonts['font32'])
 
-        qlib.draw_text(screen, f"Всего вопросов: {score['number_of_questions']}", (150, 150), False, fonts['font32'])
-        qlib.draw_text(screen, f"Правильных ответов: {score['true_answers']}", (150, 200), False, fonts['font32'])
-        qlib.draw_text(screen, f"Набрано очков: {score['score']}", (150, 250), False, fonts['font32'])
+        qlib.draw_text(screen, f"Всего вопросов: {score['number_of_questions']}", (100, 150), False, fonts['font32'])
+        qlib.draw_text(screen, f"Правильных ответов: {score['true_answers']}", (100, 200), False, fonts['font32'])
+        qlib.draw_text(screen, f"Набрано очков: {score['score']}", (100, 250), False, fonts['font32'])
 
         qlib.draw_button(screen, button_next)
         qlib.draw_button(screen, button_end)
