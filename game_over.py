@@ -66,7 +66,7 @@ def draw_game_over_page(screen, state, quiz_set):
         for _ in range(50):  # Добавляем 50 частиц
             particles.append(Particle(x, y, color))
 
-    mixer.music.load("sound/vyigrysh.mp3")
+    mixer.music.load("vyigrysh.mp3")
 
     # Setting the volume
     mixer.music.set_volume(0.7)
