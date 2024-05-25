@@ -5,6 +5,7 @@ import profile_page as pp
 import category_page as cp
 import quiz_page as qp
 import quiz_result_page as qrp
+import game_over as gg
 
 
 pygame.init()
@@ -36,6 +37,9 @@ def main():
 
         elif state == 'quiz':
             state, quiz_set = qp.draw_quiz_page(screen, state, quiz_set, user_data)
+
+        elif state == 'game_over':
+            state = gg.draw_game_over_page(screen, state, quiz_set)
 
         elif state == 'quiz_result':
             state = qrp.draw_quiz_result_page(screen, state, quiz_set)

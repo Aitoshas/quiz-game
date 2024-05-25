@@ -95,4 +95,4 @@ def draw_quiz_page(screen, state, quiz_set, user_data):
                 next_question = False
 
             else:
-                return 'quiz_result', quiz_set
+                return 'game_over', quiz_set

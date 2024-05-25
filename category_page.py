@@ -63,8 +63,12 @@ def draw_category_page(screen, state):
             if state == 'category':
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if button_category['bt_rect'].collidepoint(event.pos):
-                        quiz_set = create_quiz_set(quiz_category)
-                        return 'quiz', quiz_set
+                        act_one = False
+                        for t_one in quiz_category:
+                            act_one += t_one['active']
+                        if act_one:
+                            quiz_set = create_quiz_set(quiz_category)
+                            return 'quiz', quiz_set
 
                     for ind, rect in enumerate(rect_category):
                         if rect.collidepoint(event.pos):

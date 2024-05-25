@@ -41,12 +41,25 @@ def get_history(cur_user):
 
     return user_history
 
+def get_stats(cur_user):
+    user_stats = []
+    user_stats = db_quiz.sql_get_full_stats_user(cur_user['id'])
+    all_stats = 0
+    all_sum = 0
+    #user_id, cnt, sum_all
+    for s_one in user_stats:
+        all_stats = s_one[1]
+        all_sum = s_one[2]
+        break
+
+    return {'all_count': all_stats, "all_sum": all_sum}
 
 def draw_profile_page(screen, state, current_user):
 
     fonts = qlib.create_fonts()
     clock = pygame.time.Clock()
     user_history = get_history(current_user)
+    #user_stats = get_stats(current_user)
     button_profile = qlib.create_button('Перейти к категориям', 100, 520, 290, 40, qlib.TEXT_COLOR, font=fonts['font32'])
     button_end = qlib.create_button('Покинуть игру', 420, 520, 200, 40, qlib.TEXT_COLOR, font=fonts['font32'])
     button_load_avatar = qlib.create_button('Загрузить аватар', 250, 170, 200, 40, qlib.TEXT_COLOR, font=fonts['font24'])
@@ -86,10 +99,12 @@ def draw_profile_page(screen, state, current_user):
 
         qlib.draw_text(screen, f'Всего пройдено викторин: {len(user_history)}', (80, 230), False, fonts['font24'])
         qlib.draw_text(screen, f'Набрано очков: {sum([x["score"] for x in user_history])}', (380, 230), False, fonts['font24'])
+        #qlib.draw_text(screen, f'Всего пройдено викторин: {user_stats["all_count"]}', (80, 230), False, fonts['font24'])
+        #qlib.draw_text(screen, f'Набрано очков: {user_stats["all_sum"]}', (380, 230), False, fonts['font24'])
 
         qlib.draw_text(screen, f'Результаты последних 5 игр', (80, 270), False, fonts['font24'])
         qlib.draw_grid(screen, (75, 295), 480, 210)
-        qlib.draw_text(screen, f'№ викторины           дата                 результат',(80, 300), False, fonts['font24'])
+        qlib.draw_text(screen, f'№ викторины           дата                     результат',(80, 300), False, fonts['font24'])
         for ind, history in enumerate(user_history):
             if ind == 5:
                 break
